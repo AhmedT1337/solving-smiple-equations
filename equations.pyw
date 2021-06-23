@@ -14,19 +14,22 @@ def insert(text) :
 Entry = ttk.Entry(root, width = 50, font = ('Arial', 10))
 Entry.grid(row = 0, column = 0, columnspan = 3, ipady = 10, ipadx = 10, pady = 8, padx = 8)
 
+show = ttk.Entry(root, width  = 40, font = ('Arial', 10))
+show.grid(row = 1, column = 0, columnspan = 3, ipady = 10, ipadx = 10, pady = 8, padx = 8)
+
 ########################
 
 x = ttk.Button(root, width = 10, text = "x", command = lambda:insert("x "))
-x.grid(row = 1, column = 0, ipadx = 8, ipady = 8, pady = 8, padx = 8)
+x.grid(row = 2, column = 0, ipadx = 8, ipady = 8, pady = 8, padx = 8)
 
 X = ttk.Button(root, width = 10, text = "X", command = lambda:insert("X "))
-X.grid(row = 1, column = 2, ipadx = 8, ipady = 8, pady = 8, padx = 8)
+X.grid(row = 2, column = 2, ipadx = 8, ipady = 8, pady = 8, padx = 8)
 
 ########################
 
 buttons_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, "+", 0, "-", "*", "=", "/", "*"]
 
-rows = 2
+rows = 3
 columns = 0
 
 for i in buttons_list :
@@ -46,11 +49,11 @@ for i in buttons_list :
         columns = 0
 
 
-button_delete = ttk.Button(root, text = "CE", command = lambda:Entry.delete( len(Entry.get()) - 3) )
-button_delete.grid(row = 7, column = 1, ipady = 8, ipadx = 8)
+button_delete = ttk.Button(root, text = "C", command = lambda:Entry.delete(0, END) )
+button_delete.grid(row = 8, column = 1, ipady = 8, ipadx = 8)
 
 button_calculate = ttk.Button(root, text = "calculate")
-button_calculate.grid(row = 7, column = 2, ipady = 8, ipadx = 8)
+button_calculate.grid(row = 8, column = 2, ipady = 8, ipadx = 8)
         
 ########################
 
@@ -58,37 +61,29 @@ def calculate() :
     entry_list = Entry.get().split()
     result = float(entry_list[entry_list.index("=") + 1])
     ##############################################################
+    for i in entry_list :
+        if i == "+" :
+            result -= float(entry_list[entry_list.index("+") + 1])
+        elif i == "-" :
+            result += float(entry_list[entry_list.index("-") + 1])
+        elif i == "*" :
+            result /= float(entry_list[entry_list.index("*") + 1])
+        elif i == "/" :
+            result *= float(entry_list[entry_list.index("/") + 1])
+        else :
+            pass
     
-    if "+" in entry_list :
-        num_to_minus = float(entry_list[entry_list.index("+") + 1])
-    elif "-" in entry_list :
-        num_to_add = float(entry_list[entry_list.index("-") + 1])
-    elif "*" in entry_list :
-        num_to_devide = float(entry_list[entry_list.index("*") + 1])
-    elif "/" in emtry_list : 
-        num_to_time = float(entry_list[entry_list.index("/") + 1])
-    else : pass
-    #############################################
+    if "X" in entry_list :
+        result = sqrt(result)
+    else :
+        pass
     
-    try : result -= float(num_to_minus)
-    except : pass
-    ##############################################################
-    try : result += float(num_to_add)
-    except : pass
-    ##############################################################
-    try : result = float (result / num_to_devide)
-    except : pass
-    ##############################################################
-    try : result = float(result * num_to_time)
-    except : pass
-    
-    if "X" in entry_list :result = sqrt(result)
-    else : pass
-    
-    print("The Final Result = {}".format(result))
-    messagebox.showinfo(title = "Solved !!!", message = "x = {}".format(result))
-    Entry.delete(0, END)
+    show.delete(0, END)
 
+    show.insert(END, result)
+    
+    Entry.delete(0, END)
+    
 
 button_calculate.configure(command = calculate)
 
